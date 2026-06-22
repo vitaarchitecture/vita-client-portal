@@ -58,6 +58,7 @@ function submitToken() {
 
 function renderAll() {
   renderOverview();
+  renderConsultants();
   renderDrawings();
   renderInvoices();
   renderDeliverables();
@@ -139,11 +140,14 @@ async function saveInvoices() {
         amount: inputs[2].value,
         date_issued: inputs[3].value,
         due_date: inputs[4].value,
-        status: inputs[5].value
+        status: inputs[5].value,
+        stage_start: inputs[6].value,
+        stage_end: inputs[7].value,
+        percent_complete: inputs[8].value
       });
     });
 
-    const headers = ['invoice_number', 'description', 'amount', 'date_issued', 'due_date', 'status'];
+    const headers = ['invoice_number', 'description', 'amount', 'date_issued', 'due_date', 'status', 'stage_start', 'stage_end', 'percent_complete'];
     const csv = arrayToCSV(headers, rows);
     await saveFile('data/invoices.csv', csv, 'Update invoices');
     invoices = rows;
@@ -172,11 +176,12 @@ async function saveDeliverables() {
         responsible: inputs[2].value,
         due_date: inputs[3].value,
         status: inputs[4].value,
-        notes: inputs[5].value
+        percent_complete: inputs[5].value,
+        notes: inputs[6].value
       });
     });
 
-    const headers = ['deliverable', 'stage', 'responsible', 'due_date', 'status', 'notes'];
+    const headers = ['deliverable', 'stage', 'responsible', 'due_date', 'status', 'percent_complete', 'notes'];
     const csv = arrayToCSV(headers, rows);
     await saveFile('data/deliverables.csv', csv, 'Update deliverables');
     deliverables = rows;
@@ -223,6 +228,60 @@ async function saveActions() {
   }
 }
 
+async function saveConsultants() {
+  const btn = document.querySelector('#consultants .save-btn');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  try {
+    const rows = [];
+    document.querySelectorAll('#consultants .edit-row').forEach(tr => {
+      const inputs = tr.querySelectorAll('.edit-input, .edit-select');
+      rows.push({
+        company: inputs[0].value,
+        lead_name: inputs[1].value,
+        email: inputs[2].value,
+        phone: inputs[3].value,
+        required: inputs[4].value,
+        appointed: inputs[5].value
+      });
+    });
+
+    const headers = ['company', 'email', 'phone', 'lead_name', 'required', 'appointed'];
+    const csv = arrayToCSV(headers, rows);
+    await saveFile('data/consultants.csv', csv, 'Update consultants');
+    consultants = rows;
+    btn.textContent = 'Saved ✓';
+    setTimeout(() => { btn.textContent = 'Save Changes'; btn.disabled = false; }, 2000);
+  } catch (e) {
+    alert('Save failed: ' + e.message);
+    btn.textContent = 'Save Changes';
+    btn.disabled = false;
+  }
+}
+
+function addConsultantRow() {
+  const tbody = document.querySelector('#consultants .edit-tbody');
+  const tr = document.createElement('tr');
+  tr.className = 'edit-row';
+  tr.innerHTML = `
+    <td><input type="text" class="edit-input" value="" placeholder="Company name"></td>
+    <td><input type="text" class="edit-input" value="" placeholder="Lead name"></td>
+    <td><input type="text" class="edit-input" value="" placeholder="email@example.com"></td>
+    <td><input type="text" class="edit-input" value="" placeholder="020 XXXX XXXX"></td>
+    <td><select class="edit-select">
+      <option value="yes" selected>yes</option>
+      <option value="no">no</option>
+    </select></td>
+    <td><select class="edit-select">
+      <option value="no" selected>no</option>
+      <option value="yes">yes</option>
+    </select></td>
+    <td><button class="delete-row-btn" onclick="this.closest('tr').remove()">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
 function addInvoiceRow() {
   const tbody = document.querySelector('#invoices .edit-tbody');
   const tr = document.createElement('tr');
@@ -237,7 +296,11 @@ function addInvoiceRow() {
       <option value="outstanding" selected>outstanding</option>
       <option value="overdue">overdue</option>
       <option value="paid">paid</option>
+      <option value="upcoming">upcoming</option>
     </select></td>
+    <td><input type="text" class="edit-input edit-date" value="" placeholder="DD/MM/YYYY"></td>
+    <td><input type="text" class="edit-input edit-date" value="" placeholder="DD/MM/YYYY"></td>
+    <td><input type="text" class="edit-input" value="0" placeholder="0-100"></td>
     <td><button class="delete-row-btn" onclick="this.closest('tr').remove()">✕</button></td>
   `;
   tbody.appendChild(tr);
@@ -257,6 +320,7 @@ function addDeliverableRow() {
       <option value="in_progress">in progress</option>
       <option value="complete">complete</option>
     </select></td>
+    <td><input type="text" class="edit-input" value="0" placeholder="0-100"></td>
     <td><input type="text" class="edit-input" value="" placeholder="Notes"></td>
     <td><button class="delete-row-btn" onclick="this.closest('tr').remove()">✕</button></td>
   `;

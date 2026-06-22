@@ -1,6 +1,6 @@
-deliverable,stage,responsible,due_date,status,notes
-Feasibility Report,Stage 1,Vita Architecture,30/01/2026,complete,
-Concept Design Package,Stage 2,Vita Architecture,30/03/2026,complete,
-Planning Application Drawings,Stage 3,Vita Architecture,15/06/2026,in_progress,Awaiting heritage officer feedback
-Building Regs Drawings,Stage 4,Vita Architecture,01/08/2026,upcoming,
-Tender Package,Stage 5,Vita Architecture,15/09/2026,upcoming,
+deliverable,stage,responsible,due_date,status,percent_complete,notes
+Feasibility Report,Stage 1,Vita Architecture,30/01/2026,complete,100,
+Concept Design Package,Stage 2,Vita Architecture,30/03/2026,complete,100,
+Planning Application Drawings,Stage 3,Vita Architecture,15/06/2026,in_progress,85,Awaiting heritage officer feedback
+Building Regs Drawings,Stage 4,Vita Architecture,01/08/2026,upcoming,0,
+Tender Package,Stage 5,Vita Architecture,15/09/2026,upcoming,0,

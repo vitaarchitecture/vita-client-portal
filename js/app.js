@@ -2,18 +2,21 @@ let config = {};
 let invoices = [];
 let deliverables = [];
 let actions = [];
+let consultants = [];
 
 async function loadData() {
   config = await fetch('data/config.json').then(r => r.json());
   invoices = await loadCSV('data/invoices.csv');
   deliverables = await loadCSV('data/deliverables.csv');
   actions = await loadCSV('data/actions.csv');
+  consultants = await loadCSV('data/consultants.csv');
 
   document.getElementById('project-name').textContent = config.project.name;
   document.getElementById('project-detail').textContent =
     `${config.project.client} — ${config.project.address}`;
 
   renderOverview();
+  renderConsultants();
   renderDrawings();
   renderInvoices();
   renderDeliverables();
@@ -95,6 +98,10 @@ function renderOverview() {
         <div class="label">Actions Due This Week</div>
       </div>
     </div>
+    <div class="chart-panel">
+      <h3 class="section-subtitle">Programme</h3>
+      <div id="overview-gantt"></div>
+    </div>
     <div class="overview-grid">
       <div class="panel">
         <h3>Upcoming Deadlines</h3>
@@ -111,6 +118,61 @@ function renderOverview() {
           ${deliverables.map(d => `<li><span>${d.deliverable}</span>${badge(d.status)}</li>`).join('')}
         </ul>
       </div>
+    </div>
+  `;
+  renderGanttChart('overview-gantt', invoices);
+}
+
+// --- Consultants ---
+function renderConsultants() {
+  if (adminMode) {
+    document.getElementById('consultants').innerHTML = `
+      <h2 class="section-title">Project Consultants</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Company</th><th>Lead Name</th><th>Email</th><th>Phone</th><th>Required</th><th>Appointed</th><th></th></tr></thead>
+          <tbody class="edit-tbody">
+            ${consultants.map(c => `<tr class="edit-row">
+              <td>${editableInput(c.company)}</td>
+              <td>${editableInput(c.lead_name)}</td>
+              <td>${editableInput(c.email)}</td>
+              <td>${editableInput(c.phone)}</td>
+              <td>${editableSelect(c.required, ['yes', 'no'])}</td>
+              <td>${editableSelect(c.appointed, ['yes', 'no'])}</td>
+              <td><button class="delete-row-btn" onclick="this.closest('tr').remove()">✕</button></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="admin-toolbar">
+        <button class="add-row-btn" onclick="addConsultantRow()">+ Add Consultant</button>
+        <button class="save-btn" onclick="saveConsultants()">Save Changes</button>
+      </div>
+    `;
+    return;
+  }
+
+  function yesNoBadge(val) {
+    if (val === 'yes') return '<span class="badge badge-complete">Yes</span>';
+    return '<span class="badge badge-overdue">No</span>';
+  }
+
+  document.getElementById('consultants').innerHTML = `
+    <h2 class="section-title">Project Consultants</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Company</th><th>Lead Name</th><th>Email</th><th>Phone</th><th>Required</th><th>Appointed</th></tr></thead>
+        <tbody>
+          ${consultants.map(c => `<tr>
+            <td style="font-weight:600">${c.company}</td>
+            <td>${c.lead_name}</td>
+            <td><a href="mailto:${c.email}" style="color:var(--accent-light)">${c.email}</a></td>
+            <td>${c.phone}</td>
+            <td>${yesNoBadge(c.required)}</td>
+            <td>${yesNoBadge(c.appointed)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
     </div>
   `;
 }
@@ -150,7 +212,7 @@ function renderInvoices() {
       <h2 class="section-title">All Invoices</h2>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Invoice</th><th>Description</th><th>Amount</th><th>Issued</th><th>Due</th><th>Status</th><th></th></tr></thead>
+          <thead><tr><th>Invoice</th><th>Description</th><th>Amount</th><th>Issued</th><th>Due</th><th>Status</th><th>Stage Start</th><th>Stage End</th><th>% Done</th><th></th></tr></thead>
           <tbody class="edit-tbody">
             ${invoices.map(i => `<tr class="edit-row">
               <td>${editableInput(i.invoice_number)}</td>
@@ -158,7 +220,10 @@ function renderInvoices() {
               <td>${editableInput(i.amount)}</td>
               <td>${editableDateInput(i.date_issued)}</td>
               <td>${editableDateInput(i.due_date)}</td>
-              <td>${editableSelect(i.status, ['outstanding', 'overdue', 'paid'])}</td>
+              <td>${editableSelect(i.status, ['outstanding', 'overdue', 'paid', 'upcoming'])}</td>
+              <td>${editableDateInput(i.stage_start)}</td>
+              <td>${editableDateInput(i.stage_end)}</td>
+              <td>${editableInput(i.percent_complete)}</td>
               <td><button class="delete-row-btn" onclick="this.closest('tr').remove()">✕</button></td>
             </tr>`).join('')}
           </tbody>
@@ -213,7 +278,12 @@ function renderInvoices() {
         </tbody>
       </table>
     </div>
+    <div class="chart-panel">
+      <h3 class="section-subtitle">Programme</h3>
+      <div id="invoices-gantt"></div>
+    </div>
   `;
+  renderGanttChart('invoices-gantt', invoices);
 }
 
 // --- Deliverables ---
@@ -223,7 +293,7 @@ function renderDeliverables() {
       <h2 class="section-title">Architectural Deliverables</h2>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Deliverable</th><th>Stage</th><th>Responsible</th><th>Due</th><th>Status</th><th>Notes</th><th></th></tr></thead>
+          <thead><tr><th>Deliverable</th><th>Stage</th><th>Responsible</th><th>Due</th><th>Status</th><th>% Complete</th><th>Notes</th><th></th></tr></thead>
           <tbody class="edit-tbody">
             ${deliverables.map(d => `<tr class="edit-row">
               <td>${editableInput(d.deliverable)}</td>
@@ -231,6 +301,7 @@ function renderDeliverables() {
               <td>${editableInput(d.responsible)}</td>
               <td>${editableDateInput(d.due_date)}</td>
               <td>${editableSelect(d.status, ['upcoming', 'in_progress', 'complete'])}</td>
+              <td>${editableInput(d.percent_complete)}</td>
               <td>${editableInput(d.notes)}</td>
               <td><button class="delete-row-btn" onclick="this.closest('tr').remove()">✕</button></td>
             </tr>`).join('')}
@@ -249,13 +320,14 @@ function renderDeliverables() {
     <h2 class="section-title">Architectural Deliverables</h2>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Deliverable</th><th>Stage</th><th>Responsible</th><th>Due</th><th>Status</th><th>Notes</th></tr></thead>
+        <thead><tr><th>Deliverable</th><th>Stage</th><th>Responsible</th><th>Due</th><th>% Complete</th><th>Status</th><th>Notes</th></tr></thead>
         <tbody>
           ${deliverables.map(d => `<tr>
             <td>${d.deliverable}</td>
             <td>${d.stage}</td>
             <td>${d.responsible}</td>
             <td>${d.status === 'complete' ? formatDate(d.due_date) : dueDateHTML(d.due_date)}</td>
+            <td><div class="progress-bar"><div class="progress-fill" style="width:${d.percent_complete || 0}%"></div><span>${d.percent_complete || 0}%</span></div></td>
             <td>${badge(d.status)}</td>
             <td style="font-size:0.8rem;color:var(--text-muted)">${d.notes || '—'}</td>
           </tr>`).join('')}
