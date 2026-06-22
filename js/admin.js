@@ -239,7 +239,7 @@ async function saveConsultants() {
       const inputs = tr.querySelectorAll('.edit-input, .edit-select');
       rows.push({
         company: inputs[0].value,
-        lead_name: inputs[1].value,
+        contact_name: inputs[1].value,
         email: inputs[2].value,
         phone: inputs[3].value,
         required: inputs[4].value,
@@ -247,7 +247,7 @@ async function saveConsultants() {
       });
     });
 
-    const headers = ['company', 'email', 'phone', 'lead_name', 'required', 'appointed'];
+    const headers = ['company', 'contact_name', 'email', 'phone', 'required', 'appointed'];
     const csv = arrayToCSV(headers, rows);
     await saveFile('data/consultants.csv', csv, 'Update consultants');
     consultants = rows;
@@ -261,14 +261,70 @@ async function saveConsultants() {
 }
 
 function addConsultantRow() {
-  const tbody = document.querySelector('#consultants .edit-tbody');
+  const tbody = document.getElementById('consultants-tbody');
   const tr = document.createElement('tr');
   tr.className = 'edit-row';
   tr.innerHTML = `
     <td><input type="text" class="edit-input" value="" placeholder="Company name"></td>
-    <td><input type="text" class="edit-input" value="" placeholder="Lead name"></td>
+    <td><input type="text" class="edit-input" value="" placeholder="Contact name"></td>
     <td><input type="text" class="edit-input" value="" placeholder="email@example.com"></td>
     <td><input type="text" class="edit-input" value="" placeholder="020 XXXX XXXX"></td>
+    <td><select class="edit-select">
+      <option value="yes" selected>yes</option>
+      <option value="no">no</option>
+    </select></td>
+    <td><select class="edit-select">
+      <option value="no" selected>no</option>
+      <option value="yes">yes</option>
+    </select></td>
+    <td><button class="delete-row-btn" onclick="this.closest('tr').remove()">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+async function saveCDP() {
+  const btn = document.querySelector('#consultants .save-btn:last-of-type');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  try {
+    const rows = [];
+    document.querySelectorAll('#cdp-tbody .edit-row').forEach(tr => {
+      const inputs = tr.querySelectorAll('.edit-input, .edit-select');
+      rows.push({
+        company: inputs[0].value,
+        contact_name: inputs[1].value,
+        email: inputs[2].value,
+        phone: inputs[3].value,
+        package: inputs[4].value,
+        required: inputs[5].value,
+        appointed: inputs[6].value
+      });
+    });
+
+    const headers = ['company', 'contact_name', 'email', 'phone', 'package', 'required', 'appointed'];
+    const csv = arrayToCSV(headers, rows);
+    await saveFile('data/cdp.csv', csv, 'Update CDP');
+    cdp = rows;
+    btn.textContent = 'Saved ✓';
+    setTimeout(() => { btn.textContent = 'Save Changes'; btn.disabled = false; }, 2000);
+  } catch (e) {
+    alert('Save failed: ' + e.message);
+    btn.textContent = 'Save Changes';
+    btn.disabled = false;
+  }
+}
+
+function addCDPRow() {
+  const tbody = document.getElementById('cdp-tbody');
+  const tr = document.createElement('tr');
+  tr.className = 'edit-row';
+  tr.innerHTML = `
+    <td><input type="text" class="edit-input" value="" placeholder="Company name"></td>
+    <td><input type="text" class="edit-input" value="" placeholder="Contact name"></td>
+    <td><input type="text" class="edit-input" value="" placeholder="email@example.com"></td>
+    <td><input type="text" class="edit-input" value="" placeholder="020 XXXX XXXX"></td>
+    <td><input type="text" class="edit-input" value="" placeholder="Package"></td>
     <td><select class="edit-select">
       <option value="yes" selected>yes</option>
       <option value="no">no</option>

@@ -3,6 +3,7 @@ let invoices = [];
 let deliverables = [];
 let actions = [];
 let consultants = [];
+let cdp = [];
 
 async function loadData() {
   config = await fetch('data/config.json').then(r => r.json());
@@ -10,6 +11,7 @@ async function loadData() {
   deliverables = await loadCSV('data/deliverables.csv');
   actions = await loadCSV('data/actions.csv');
   consultants = await loadCSV('data/consultants.csv');
+  cdp = await loadCSV('data/cdp.csv');
 
   document.getElementById('project-name').textContent = config.project.name;
   document.getElementById('project-detail').textContent =
@@ -124,17 +126,22 @@ function renderOverview() {
 }
 
 // --- Consultants ---
+function yesNoBadge(val) {
+  if (val === 'yes') return '<span class="badge badge-complete">Yes</span>';
+  return '<span class="badge badge-overdue">No</span>';
+}
+
 function renderConsultants() {
   if (adminMode) {
     document.getElementById('consultants').innerHTML = `
       <h2 class="section-title">Project Consultants</h2>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Company</th><th>Lead Name</th><th>Email</th><th>Phone</th><th>Required</th><th>Appointed</th><th></th></tr></thead>
-          <tbody class="edit-tbody">
+          <thead><tr><th>Company</th><th>Contact Name</th><th>Email</th><th>Phone</th><th>Required</th><th>Appointed</th><th></th></tr></thead>
+          <tbody class="edit-tbody" id="consultants-tbody">
             ${consultants.map(c => `<tr class="edit-row">
               <td>${editableInput(c.company)}</td>
-              <td>${editableInput(c.lead_name)}</td>
+              <td>${editableInput(c.contact_name)}</td>
               <td>${editableInput(c.email)}</td>
               <td>${editableInput(c.phone)}</td>
               <td>${editableSelect(c.required, ['yes', 'no'])}</td>
@@ -148,26 +155,60 @@ function renderConsultants() {
         <button class="add-row-btn" onclick="addConsultantRow()">+ Add Consultant</button>
         <button class="save-btn" onclick="saveConsultants()">Save Changes</button>
       </div>
+      <h2 class="section-title">Contractor Design Portion (CDP)</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Company</th><th>Contact Name</th><th>Email</th><th>Phone</th><th>Package</th><th>Required</th><th>Appointed</th><th></th></tr></thead>
+          <tbody class="edit-tbody" id="cdp-tbody">
+            ${cdp.map(c => `<tr class="edit-row">
+              <td>${editableInput(c.company)}</td>
+              <td>${editableInput(c.contact_name)}</td>
+              <td>${editableInput(c.email)}</td>
+              <td>${editableInput(c.phone)}</td>
+              <td>${editableInput(c.package)}</td>
+              <td>${editableSelect(c.required, ['yes', 'no'])}</td>
+              <td>${editableSelect(c.appointed, ['yes', 'no'])}</td>
+              <td><button class="delete-row-btn" onclick="this.closest('tr').remove()">✕</button></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="admin-toolbar">
+        <button class="add-row-btn" onclick="addCDPRow()">+ Add CDP Entry</button>
+        <button class="save-btn" onclick="saveCDP()">Save Changes</button>
+      </div>
     `;
     return;
-  }
-
-  function yesNoBadge(val) {
-    if (val === 'yes') return '<span class="badge badge-complete">Yes</span>';
-    return '<span class="badge badge-overdue">No</span>';
   }
 
   document.getElementById('consultants').innerHTML = `
     <h2 class="section-title">Project Consultants</h2>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Company</th><th>Lead Name</th><th>Email</th><th>Phone</th><th>Required</th><th>Appointed</th></tr></thead>
+        <thead><tr><th>Company</th><th>Contact Name</th><th>Email</th><th>Phone</th><th>Required</th><th>Appointed</th></tr></thead>
         <tbody>
           ${consultants.map(c => `<tr>
             <td style="font-weight:600">${c.company}</td>
-            <td>${c.lead_name}</td>
+            <td>${c.contact_name}</td>
             <td><a href="mailto:${c.email}" style="color:var(--accent-light)">${c.email}</a></td>
             <td>${c.phone}</td>
+            <td>${yesNoBadge(c.required)}</td>
+            <td>${yesNoBadge(c.appointed)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <h2 class="section-title">Contractor Design Portion (CDP)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Company</th><th>Contact Name</th><th>Email</th><th>Phone</th><th>Package</th><th>Required</th><th>Appointed</th></tr></thead>
+        <tbody>
+          ${cdp.map(c => `<tr>
+            <td style="font-weight:600">${c.company || '—'}</td>
+            <td>${c.contact_name || '—'}</td>
+            <td>${c.email ? `<a href="mailto:${c.email}" style="color:var(--accent-light)">${c.email}</a>` : '—'}</td>
+            <td>${c.phone || '—'}</td>
+            <td>${c.package || '—'}</td>
             <td>${yesNoBadge(c.required)}</td>
             <td>${yesNoBadge(c.appointed)}</td>
           </tr>`).join('')}

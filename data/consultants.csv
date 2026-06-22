@@ -1,4 +1,4 @@
-company,email,phone,lead_name,required,appointed
-Smith Engineering,info@smitheng.co.uk,020 1234 5678,John Smith,yes,no
-Bright Services,hello@brightmep.co.uk,020 2345 6789,Sarah Bright,yes,yes
-Example Surveyors,contact@examplesurveyors.co.uk,020 3456 7890,David Example,yes,yes
+company,contact_name,email,phone,required,appointed
+Smith Engineering,John Smith,info@smitheng.co.uk,020 1234 5678,yes,no
+Bright Services,Sarah Bright,hello@brightmep.co.uk,020 2345 6789,yes,yes
+Example Surveyors,David Example,contact@examplesurveyors.co.uk,020 3456 7890,yes,yes
