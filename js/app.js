@@ -145,6 +145,33 @@ function renderDrawings() {
 
 // --- Invoices ---
 function renderInvoices() {
+  if (adminMode) {
+    document.getElementById('invoices').innerHTML = `
+      <h2 class="section-title">All Invoices</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Invoice</th><th>Description</th><th>Amount</th><th>Issued</th><th>Due</th><th>Status</th><th></th></tr></thead>
+          <tbody class="edit-tbody">
+            ${invoices.map(i => `<tr class="edit-row">
+              <td>${editableInput(i.invoice_number)}</td>
+              <td>${editableInput(i.description)}</td>
+              <td>${editableInput(i.amount)}</td>
+              <td>${editableDateInput(i.date_issued)}</td>
+              <td>${editableDateInput(i.due_date)}</td>
+              <td>${editableSelect(i.status, ['outstanding', 'overdue', 'paid'])}</td>
+              <td><button class="delete-row-btn" onclick="this.closest('tr').remove()">✕</button></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="admin-toolbar">
+        <button class="add-row-btn" onclick="addInvoiceRow()">+ Add Invoice</button>
+        <button class="save-btn" onclick="saveInvoices()">Save Changes</button>
+      </div>
+    `;
+    return;
+  }
+
   const outstanding = invoices.filter(i => i.status === 'outstanding' || i.status === 'overdue');
   const paid = invoices.filter(i => i.status === 'paid');
 
@@ -191,6 +218,33 @@ function renderInvoices() {
 
 // --- Deliverables ---
 function renderDeliverables() {
+  if (adminMode) {
+    document.getElementById('deliverables').innerHTML = `
+      <h2 class="section-title">Architectural Deliverables</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Deliverable</th><th>Stage</th><th>Responsible</th><th>Due</th><th>Status</th><th>Notes</th><th></th></tr></thead>
+          <tbody class="edit-tbody">
+            ${deliverables.map(d => `<tr class="edit-row">
+              <td>${editableInput(d.deliverable)}</td>
+              <td>${editableInput(d.stage)}</td>
+              <td>${editableInput(d.responsible)}</td>
+              <td>${editableDateInput(d.due_date)}</td>
+              <td>${editableSelect(d.status, ['upcoming', 'in_progress', 'complete'])}</td>
+              <td>${editableInput(d.notes)}</td>
+              <td><button class="delete-row-btn" onclick="this.closest('tr').remove()">✕</button></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="admin-toolbar">
+        <button class="add-row-btn" onclick="addDeliverableRow()">+ Add Deliverable</button>
+        <button class="save-btn" onclick="saveDeliverables()">Save Changes</button>
+      </div>
+    `;
+    return;
+  }
+
   document.getElementById('deliverables').innerHTML = `
     <h2 class="section-title">Architectural Deliverables</h2>
     <div class="table-wrap">
@@ -213,6 +267,33 @@ function renderDeliverables() {
 
 // --- Actions ---
 function renderActions() {
+  if (adminMode) {
+    document.getElementById('actions').innerHTML = `
+      <h2 class="section-title">All Actions</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Action</th><th>Assigned To</th><th>Role</th><th>Due</th><th>Status</th><th>Notes</th><th></th></tr></thead>
+          <tbody class="edit-tbody">
+            ${actions.map(a => `<tr class="edit-row">
+              <td>${editableInput(a.action)}</td>
+              <td>${editableInput(a.assigned_to)}</td>
+              <td>${editableInput(a.role)}</td>
+              <td>${editableDateInput(a.due_date)}</td>
+              <td>${editableSelect(a.status, ['outstanding', 'in_progress', 'upcoming', 'complete'])}</td>
+              <td>${editableInput(a.notes)}</td>
+              <td><button class="delete-row-btn" onclick="this.closest('tr').remove()">✕</button></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="admin-toolbar">
+        <button class="add-row-btn" onclick="addActionRow()">+ Add Action</button>
+        <button class="save-btn" onclick="saveActions()">Save Changes</button>
+      </div>
+    `;
+    return;
+  }
+
   const clientActions = actions.filter(a => a.role === 'Client');
   const otherActions = actions.filter(a => a.role !== 'Client');
 

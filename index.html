@@ -11,8 +11,24 @@
 <body>
   <header>
     <h1 id="project-name">VITA ARCHITECTURE</h1>
-    <span class="project-info" id="project-detail">Client Portal</span>
+    <div class="header-right">
+      <span class="project-info" id="project-detail">Client Portal</span>
+      <button id="admin-btn" onclick="toggleAdmin()">Admin</button>
+    </div>
   </header>
+
+  <div id="token-modal" class="modal-overlay">
+    <div class="modal">
+      <h3>Admin Login</h3>
+      <p>Enter your GitHub Personal Access Token to enable editing.<br>
+      <a href="https://github.com/settings/tokens/new?scopes=repo&description=Vita+Portal+Admin" target="_blank">Generate a token here ↗</a></p>
+      <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxx" onkeydown="if(event.key==='Enter')submitToken()">
+      <div class="modal-buttons">
+        <button onclick="hideTokenModal()">Cancel</button>
+        <button class="btn-primary" onclick="submitToken()">Connect</button>
+      </div>
+    </div>
+  </div>
 
   <nav>
     <button data-tab="overview" class="active">Overview</button>
@@ -30,6 +46,7 @@
     <section id="actions" class="section"></section>
   </main>
 
+  <script src="js/admin.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

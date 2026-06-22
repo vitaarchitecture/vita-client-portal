@@ -255,6 +255,153 @@ tr:last-child td { border-bottom: none; }
 .due-date.overdue { color: var(--danger); font-weight: 600; }
 .due-date.soon { color: var(--warning); font-weight: 600; }
 
+/* Header right */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#admin-btn {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#admin-btn:hover { background: rgba(255,255,255,0.25); }
+.admin-mode #admin-btn { background: var(--success); border-color: var(--success); }
+
+/* Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay.visible { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 2rem;
+  max-width: 420px;
+  width: 90%;
+}
+
+.modal h3 { margin-bottom: 0.75rem; }
+.modal p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5; }
+.modal a { color: var(--accent-light); }
+
+.modal input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.modal-buttons button {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.modal-buttons .btn-primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* Admin edit mode */
+.edit-input {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  background: #fafafa;
+}
+
+.edit-input:focus { border-color: var(--accent-light); outline: none; background: white; }
+
+.edit-select {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  background: #fafafa;
+}
+
+.edit-date { width: 100px; }
+
+.admin-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.add-row-btn {
+  background: none;
+  border: 1px dashed var(--border);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.add-row-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.save-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.save-btn:hover { background: var(--accent-light); }
+.save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.delete-row-btn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.2rem 0.5rem;
+  opacity: 0.5;
+}
+
+.delete-row-btn:hover { opacity: 1; }
+
 @media (max-width: 768px) {
   header { flex-direction: column; gap: 0.5rem; }
   .overview-grid { grid-template-columns: 1fr; }
