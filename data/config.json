@@ -1,0 +1,34 @@
+{
+  "project": {
+    "name": "Sample Project",
+    "client": "Client Name",
+    "address": "123 Example Street, London"
+  },
+  "drawings": {
+    "vita": {
+      "label": "Vita Architecture Drawings",
+      "url": "https://onedrive.live.com/YOUR_LINK_HERE",
+      "description": "Latest architectural drawings"
+    },
+    "consultants": [
+      {
+        "label": "Structural Engineer",
+        "firm": "Example Structures Ltd",
+        "url": "https://onedrive.live.com/YOUR_LINK_HERE",
+        "description": "Structural drawings & calculations"
+      },
+      {
+        "label": "M&E Engineer",
+        "firm": "Example MEP Ltd",
+        "url": "https://onedrive.live.com/YOUR_LINK_HERE",
+        "description": "Mechanical & electrical drawings"
+      },
+      {
+        "label": "Party Wall Surveyor",
+        "firm": "Example Surveyors",
+        "url": "https://onedrive.live.com/YOUR_LINK_HERE",
+        "description": "Party wall documents"
+      }
+    ]
+  }
+}

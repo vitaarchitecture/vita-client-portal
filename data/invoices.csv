@@ -1,0 +1,6 @@
+invoice_number,description,amount,date_issued,due_date,status
+VA-001,Stage 1 - Feasibility & Brief,2500,15/01/2026,15/02/2026,paid
+VA-002,Stage 2 - Concept Design,4000,01/03/2026,01/04/2026,paid
+VA-003,Stage 3 - Spatial Coordination,5500,01/05/2026,01/06/2026,overdue
+VA-004,Stage 4 - Technical Design (50%),3000,15/06/2026,15/07/2026,outstanding
+VA-005,Stage 4 - Technical Design (50%),,,,

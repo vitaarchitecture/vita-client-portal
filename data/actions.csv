@@ -1,0 +1,7 @@
+action,assigned_to,role,due_date,status,notes,
+Review and approve concept layouts,Client,Client,01/07/2026,outstanding,Sent 2026-06-18,
+Confirm kitchen supplier selection,Client,Client,01/07/2026,outstanding,Need supplier name for coord drawings,
+Appoint structural engineer,Client,Client,01/07/2026,outstanding,,
+Provide M&E layout for coordination,Bright Services,M&E Engineer,01/07/2026,outstanding,Chased 2026-06-20,
+Issue updated GA plans,Vita Architecture,Architect,01/07/2026,in_progress,,
+Confirm party wall agreement,Client,Client,01/07/2026,upcoming,Surveyor appointed,

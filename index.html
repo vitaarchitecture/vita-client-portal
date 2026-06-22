@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vita Architecture — Client Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1 id="project-name">VITA ARCHITECTURE</h1>
+    <span class="project-info" id="project-detail">Client Portal</span>
+  </header>
+
+  <nav>
+    <button data-tab="overview" class="active">Overview</button>
+    <button data-tab="drawings">Drawings</button>
+    <button data-tab="invoices">Invoices</button>
+    <button data-tab="deliverables">Deliverables</button>
+    <button data-tab="actions">Actions</button>
+  </nav>
+
+  <main>
+    <section id="overview" class="section active"></section>
+    <section id="drawings" class="section"></section>
+    <section id="invoices" class="section"></section>
+    <section id="deliverables" class="section"></section>
+    <section id="actions" class="section"></section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
